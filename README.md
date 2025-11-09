@@ -1,8 +1,8 @@
-# 🎤 Debate Arena
+# 🎤 Debate Royale
 
-**Anonymous online debate game with AI-powered voiceovers, leveling system, and loot boxes**
+**Anonymous online debate game with live audio, AI-powered voiceovers, leveling system, and loot boxes**
 
-Debate Arena is a competitive debate platform where users can engage in anonymous debates, level up, unlock voices and profile pictures, and purchase premium content through loot boxes.
+Debate Royale is a competitive debate platform where users can engage in anonymous debates with live audio streaming, level up, unlock voices and profile pictures, and purchase premium content through loot boxes.
 
 ## 🚀 Features
 
@@ -20,7 +20,7 @@ Debate Arena is a competitive debate platform where users can engage in anonymou
 - **Frontend**: React, Tailwind CSS, Socket.io Client
 - **Backend**: Node.js, Express, Socket.io
 - **Database**: MongoDB with Mongoose
-- **APIs**: 
+- **APIs**:
   - ElevenLabs (Text-to-Speech)
   - Stripe (Payments)
 - **Real-time**: Socket.io for matchmaking and debates
@@ -37,22 +37,26 @@ Debate Arena is a competitive debate platform where users can engage in anonymou
 ### Setup
 
 1. **Clone the repository**
+
    ```bash
    git clone <your-repo-url>
    cd Backup
    ```
 
 2. **Install dependencies**
+
    ```bash
    npm run install-all
    ```
 
 3. **Set up environment variables**
+
    ```bash
    cp env.example .env
    ```
 
    Edit `.env` and add:
+
    - `MONGODB_URI` - MongoDB connection string
    - `JWT_SECRET` - Secret for JWT tokens
    - `ELEVENLABS_API_KEY` - Your ElevenLabs API key
@@ -61,16 +65,19 @@ Debate Arena is a competitive debate platform where users can engage in anonymou
    - `REACT_APP_STRIPE_PUBLISHABLE_KEY` - Your Stripe publishable key
 
 4. **Start MongoDB** (if running locally)
+
    ```bash
    mongod
    ```
 
 5. **Run the development server**
+
    ```bash
    npm run dev
    ```
 
    This will start:
+
    - Backend server on http://localhost:5000
    - Frontend on http://localhost:3000
 
@@ -103,28 +110,34 @@ Debate Arena is a competitive debate platform where users can engage in anonymou
 ## 🔧 API Endpoints
 
 ### Authentication
+
 - `POST /api/auth/register` - Register new user
 - `POST /api/auth/login` - Login user
 
 ### Users
+
 - `GET /api/users/profile` - Get user profile
 - `PUT /api/users/profile-picture` - Update profile picture
 - `PUT /api/users/voice` - Update selected voice
 
 ### Debates
+
 - `GET /api/debates/my-debates` - Get user's debates
 - `GET /api/debates/:id` - Get debate by ID
 
 ### Voices
+
 - `GET /api/voices` - Get all available voices
 - `POST /api/voices/generate` - Generate voiceover
 - `POST /api/voices/unlock` - Unlock voice with coins/gems
 
 ### Loot Boxes
+
 - `GET /api/lootboxes` - Get all loot boxes
 - `POST /api/lootboxes/open` - Open a loot box
 
 ### Payments
+
 - `POST /api/payments/create-payment-intent` - Create Stripe payment intent
 - `POST /api/payments/purchase-voice` - Purchase voice with real money
 - `POST /api/payments/webhook` - Stripe webhook handler
@@ -154,10 +167,24 @@ Debate Arena is a competitive debate platform where users can engage in anonymou
 
 ## 🔐 Security
 
-- Passwords are hashed with bcrypt
-- JWT tokens for authentication
+- Auth0 authentication (no passwords stored)
+- JWT tokens for API authentication
 - Stripe webhook signature verification
 - Input validation and sanitization
+
+## 🔑 Auth0 Setup
+
+### Social Connections
+
+If you see warnings about "Auth0 development keys":
+
+1. **Quick Fix**: Disable social connections in Auth0 Dashboard
+2. **Proper Fix**: Set up production keys (see `SETUP_SOCIAL_CONNECTIONS.md`)
+
+For production, configure your own Client ID/Secret for social providers to:
+- Remove dev keys warnings
+- Show your app branding on consent screens
+- Enable full SSO functionality
 
 ## 📄 License
 

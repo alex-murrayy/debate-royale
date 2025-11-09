@@ -1,17 +1,19 @@
 {
-  "name": "debate-arena-client",
+  "name": "debate-royale-client",
   "version": "1.0.0",
   "private": true,
   "dependencies": {
+    "@auth0/auth0-react": "^2.8.0",
+    "@stripe/react-stripe-js": "^2.4.0",
+    "@stripe/stripe-js": "^2.1.11",
+    "axios": "^1.6.2",
+    "lucide-react": "^0.294.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-scripts": "5.0.1",
     "react-router-dom": "^6.20.1",
-    "socket.io-client": "^4.5.4",
-    "axios": "^1.6.2",
-    "@stripe/stripe-js": "^2.1.11",
-    "@stripe/react-stripe-js": "^2.4.0",
-    "lucide-react": "^0.294.0"
+    "react-scripts": "5.0.1",
+    "simple-peer": "^9.11.1",
+    "socket.io-client": "^4.5.4"
   },
   "scripts": {
     "start": "react-scripts start",

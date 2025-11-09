@@ -1,15 +1,26 @@
 const express = require('express');
 const router = express.Router();
 const Debate = require('../models/Debate');
-const auth = require('../middleware/auth');
+const User = require('../models/User');
+const { auth0Middleware, auth0ErrorHandler } = require('../middleware/auth0');
+
+router.use(auth0Middleware);
+router.use(auth0ErrorHandler);
 
 // Get user's debates
-router.get('/my-debates', auth, async (req, res) => {
+router.get('/my-debates', async (req, res) => {
   try {
+    const auth0Sub = req.auth.sub;
+    const user = await User.findOne({ auth0Id: auth0Sub });
+    
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
     const debates = await Debate.find({
       $or: [
-        { 'player1.userId': req.userId },
-        { 'player2.userId': req.userId }
+        { 'player1.userId': user._id },
+        { 'player2.userId': user._id }
       ]
     }).sort({ createdAt: -1 }).limit(20);
 
@@ -20,7 +31,7 @@ router.get('/my-debates', auth, async (req, res) => {
 });
 
 // Get debate by ID
-router.get('/:id', auth, async (req, res) => {
+router.get('/:id', async (req, res) => {
   try {
     const debate = await Debate.findById(req.params.id);
     if (!debate) {

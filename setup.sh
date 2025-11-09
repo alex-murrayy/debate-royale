@@ -1,7 +1,7 @@
 #!/bin/bash
 
-echo "🎙️  HackHub Narrator Setup"
-echo "=========================="
+echo "🎤 Debate Arena Setup"
+echo "===================="
 echo ""
 
 # Check if Node.js is installed
@@ -36,13 +36,13 @@ if [ ! -f .env ]; then
     echo ""
     echo "📝 Creating .env file from env.example..."
     cp env.example .env
-    echo "⚠️  Please edit .env and add your API keys:"
+    echo "⚠️  Please edit .env and add your:"
+    echo "   - MONGODB_URI"
+    echo "   - JWT_SECRET"
     echo "   - ELEVENLABS_API_KEY"
-    echo "   - GEMINI_API_KEY"
-    echo "   - AUTH0_DOMAIN"
-    echo "   - AUTH0_CLIENT_ID"
-    echo "   - REACT_APP_AUTH0_DOMAIN"
-    echo "   - REACT_APP_AUTH0_CLIENT_ID"
+    echo "   - STRIPE_SECRET_KEY"
+    echo "   - STRIPE_WEBHOOK_SECRET"
+    echo "   - REACT_APP_STRIPE_PUBLISHABLE_KEY"
 else
     echo ""
     echo "✅ .env file already exists"
@@ -51,11 +51,13 @@ fi
 echo ""
 echo "✨ Setup complete!"
 echo ""
-echo "To start the development server, run:"
-echo "  npm run dev"
+echo "Next steps:"
+echo "1. Edit .env and add your API keys"
+echo "2. Make sure MongoDB is running"
+echo "3. Run 'npm run seed' to seed the database"
+echo "4. Run 'npm run dev' to start the development server"
 echo ""
 echo "This will start:"
 echo "  - Backend server on http://localhost:5000"
 echo "  - Frontend on http://localhost:3000"
 echo ""
-

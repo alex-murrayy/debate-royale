@@ -1,7 +1,7 @@
 {
-  "name": "debate-arena",
+  "name": "debate-royale",
   "version": "1.0.0",
-  "description": "Online anonymous debate game with voiceovers, levels, and loot boxes",
+  "description": "Debate Royale - Online anonymous debate game with live audio, voiceovers, levels, and loot boxes",
   "main": "server/index.js",
   "scripts": {
     "dev": "concurrently \"npm run server\" \"npm run client\"",
@@ -10,11 +10,21 @@
     "install-all": "npm install && cd server && npm install && cd ../client && npm install",
     "build": "cd client && npm run build"
   },
-  "keywords": ["debate", "game", "voiceover", "elevenlabs", "stripe"],
+  "keywords": [
+    "debate",
+    "game",
+    "voiceover",
+    "elevenlabs",
+    "stripe"
+  ],
   "author": "",
   "license": "MIT",
   "devDependencies": {
     "concurrently": "^8.2.2",
     "nodemon": "^3.0.2"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "express-openid-connect": "^2.19.2"
   }
 }

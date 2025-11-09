@@ -4,7 +4,27 @@ import { useAuth } from '../context/AuthContext';
 import { Mic, User, LogOut, LogIn, Trophy, ShoppingBag } from 'lucide-react';
 
 const Navbar = () => {
-  const { user, logout } = useAuth();
+  const { user, dbUser, auth0User, isAuthenticated, isLoading, logout, login } = useAuth();
+
+  // Debug logging
+  React.useEffect(() => {
+    console.log('🔍 Navbar Auth State:', {
+      isAuthenticated,
+      isLoading,
+      hasAuth0User: !!auth0User,
+      hasDbUser: !!dbUser,
+      auth0User: auth0User?.email,
+      dbUser: dbUser?.username
+    });
+  }, [isAuthenticated, isLoading, auth0User, dbUser]);
+
+  // Show login button only when not authenticated and not loading
+  const showLoginButton = !isAuthenticated && !isLoading;
+  
+  // Get display name - prefer database user, fallback to Auth0 user
+  const displayName = dbUser?.username || auth0User?.nickname || auth0User?.email || 'User';
+  const userRank = dbUser?.rank;
+  const userLevel = dbUser?.level;
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 glass-strong border-b border-slate-800/50 backdrop-blur-2xl">
@@ -19,12 +39,12 @@ const Navbar = () => {
             </div>
             <div>
               <span className="text-xl font-extrabold text-ub-white tracking-tight">Debate</span>
-              <span className="text-xl font-extrabold text-gradient-primary"> Arena</span>
+              <span className="text-xl font-extrabold text-gradient-primary"> Royale</span>
             </div>
           </Link>
           
           <div className="flex items-center space-x-8">
-            {user && (
+            {isAuthenticated && !isLoading && (
               <>
                 <Link
                   to="/matchmaking"
@@ -56,17 +76,22 @@ const Navbar = () => {
               </>
             )}
             
-            {user ? (
+            {isAuthenticated && !isLoading ? (
               <div className="flex items-center space-x-4">
-                <div className="flex items-center space-x-3 px-4 py-2 glass rounded-lg border border-slate-700/50">
+                <Link
+                  to="/profile"
+                  className="flex items-center space-x-3 px-4 py-2 glass rounded-lg border border-slate-700/50 hover:border-slate-600 transition-colors cursor-pointer"
+                >
                   <div className="w-8 h-8 bg-gradient-to-br from-ub-blue-500 to-ub-blue-600 rounded-full flex items-center justify-center">
                     <User className="h-4 w-4 text-ub-white" />
                   </div>
                   <div>
-                    <div className="text-sm text-slate-200 font-medium">{user.username}</div>
-                    <div className="text-xs text-ub-blue-400">{user.rank} • Lv.{user.level}</div>
+                    <div className="text-sm text-slate-200 font-medium">{displayName}</div>
+                    {userRank && userLevel && (
+                      <div className="text-xs text-ub-blue-400">{userRank} • Lv.{userLevel}</div>
+                    )}
                   </div>
-                </div>
+                </Link>
                 <button
                   onClick={logout}
                   className="flex items-center space-x-2 px-5 py-2.5 bg-slate-800 hover:bg-slate-700 text-ub-white rounded-xl transition-all border border-slate-700/50 hover:border-slate-600 font-semibold"
@@ -75,15 +100,15 @@ const Navbar = () => {
                   <span>Logout</span>
                 </button>
               </div>
-            ) : (
-              <Link
-                to="/login"
+            ) : showLoginButton ? (
+              <button
+                onClick={login}
                 className="flex items-center space-x-2 px-6 py-2.5 bg-gradient-to-r from-ub-blue-600 to-ub-blue-500 hover:from-ub-blue-500 hover:to-ub-blue-400 text-ub-white rounded-xl transition-all shadow-glow-ub hover:shadow-glow-lg font-bold transform hover:scale-105"
               >
                 <LogIn className="h-4 w-4" />
                 <span>Login</span>
-              </Link>
-            )}
+              </button>
+            ) : null}
           </div>
         </div>
       </div>

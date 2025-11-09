@@ -4,12 +4,18 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const User = require('../models/User');
 const LootBox = require('../models/LootBox');
 const Voice = require('../models/Voice');
-const auth = require('../middleware/auth');
+const { auth0Middleware, auth0ErrorHandler } = require('../middleware/auth0');
 
-// Create payment intent for loot box
-router.post('/create-payment-intent', auth, async (req, res) => {
+// Create payment intent for loot box - protected
+router.post('/create-payment-intent', auth0Middleware, auth0ErrorHandler, async (req, res) => {
   try {
     const { lootBoxId, amount } = req.body;
+    const auth0Sub = req.auth.sub;
+    const user = await User.findOne({ auth0Id: auth0Sub });
+    
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
     
     const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY;
     if (!STRIPE_SECRET_KEY || STRIPE_SECRET_KEY === 'fake_secret_key') {
@@ -25,7 +31,8 @@ router.post('/create-payment-intent', auth, async (req, res) => {
       amount: amount, // amount in cents
       currency: 'usd',
       metadata: {
-        userId: req.userId.toString(),
+        userId: user._id.toString(),
+        auth0Id: auth0Sub,
         lootBoxId: lootBoxId
       }
     });
@@ -36,10 +43,17 @@ router.post('/create-payment-intent', auth, async (req, res) => {
   }
 });
 
-// Create payment intent for voice
-router.post('/purchase-voice', auth, async (req, res) => {
+// Create payment intent for voice - protected
+router.post('/purchase-voice', auth0Middleware, auth0ErrorHandler, async (req, res) => {
   try {
     const { voiceId } = req.body;
+    const auth0Sub = req.auth.sub;
+    const user = await User.findOne({ auth0Id: auth0Sub });
+    
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    
     const voice = await Voice.findOne({ voiceId });
     
     if (!voice || !voice.price.realMoney) {
@@ -49,7 +63,6 @@ router.post('/purchase-voice', auth, async (req, res) => {
     const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY;
     if (!STRIPE_SECRET_KEY || STRIPE_SECRET_KEY === 'fake_secret_key') {
       // Mock payment
-      const user = await User.findById(req.userId);
       user.unlockedVoices.push(voiceId);
       await user.save();
       
@@ -64,7 +77,8 @@ router.post('/purchase-voice', auth, async (req, res) => {
       amount: voice.price.realMoney,
       currency: 'usd',
       metadata: {
-        userId: req.userId.toString(),
+        userId: user._id.toString(),
+        auth0Id: auth0Sub,
         voiceId: voiceId
       }
     });
@@ -91,9 +105,11 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
   // Handle the event
   if (event.type === 'payment_intent.succeeded') {
     const paymentIntent = event.data.object;
-    const { userId, lootBoxId, voiceId } = paymentIntent.metadata;
+    const { userId, auth0Id, lootBoxId, voiceId } = paymentIntent.metadata;
 
-    const user = await User.findById(userId);
+    const user = await User.findOne({ 
+      $or: [{ _id: userId }, { auth0Id: auth0Id }] 
+    });
     if (!user) return res.status(404).json({ error: 'User not found' });
 
     if (lootBoxId) {

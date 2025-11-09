@@ -3,44 +3,61 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import io from 'socket.io-client';
 import { Loader, Search } from 'lucide-react';
+import axios from 'axios';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
 const Matchmaking = () => {
-  const { user } = useAuth();
+  const { user, isAuthenticated, isLoading, login, getAccessTokenSilently, getUser } = useAuth();
   const navigate = useNavigate();
   const [topic, setTopic] = useState('');
   const [status, setStatus] = useState('idle'); // idle, searching, found
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
-    if (!user) {
-      navigate('/login');
+    if (!isAuthenticated && !isLoading) {
+      login();
       return;
     }
 
-    // Connect to socket
-    const newSocket = io(API_URL);
-    setSocket(newSocket);
+    const initSocket = async () => {
+      try {
+        const token = await getAccessTokenSilently();
+        // Connect to socket with auth token
+        const newSocket = io(API_URL, {
+          auth: { token }
+        });
+        setSocket(newSocket);
 
-    // Listen for match found
-    newSocket.on('match-found', (data) => {
-      setStatus('found');
-      navigate(`/debate/${data.debateId}`);
-    });
+        // Listen for match found
+        newSocket.on('match-found', (data) => {
+          setStatus('found');
+          navigate(`/debate/${data.debateId}`);
+        });
 
-    newSocket.on('matchmaking-status', (data) => {
-      if (data.status === 'waiting') {
-        setStatus('searching');
+        newSocket.on('matchmaking-status', (data) => {
+          if (data.status === 'waiting') {
+            setStatus('searching');
+          }
+        });
+
+        newSocket.on('connect_error', (error) => {
+          console.error('Socket connection error:', error);
+        });
+
+        // Cleanup function
+        return () => {
+          newSocket.close();
+        };
+      } catch (error) {
+        console.error('Error initializing socket:', error);
       }
-    });
-
-    return () => {
-      newSocket.close();
     };
-  }, [user, navigate]);
 
-  const handleStartSearch = () => {
+    initSocket();
+  }, [isAuthenticated, user, navigate, getAccessTokenSilently]);
+
+  const handleStartSearch = async () => {
     if (!topic.trim()) {
       alert('Please enter a debate topic');
       return;
@@ -48,16 +65,23 @@ const Matchmaking = () => {
 
     if (socket) {
       setStatus('searching');
+      // Get user from database to get their ID
+      const dbUser = await getUser();
       socket.emit('join-matchmaking', {
-        userId: user.id,
+        userId: dbUser?._id,
+        auth0Id: user?.sub,
         topic: topic.trim()
       });
     }
   };
 
-  const handleCancel = () => {
+  const handleCancel = async () => {
     if (socket) {
-      socket.emit('leave-matchmaking', { userId: user.id });
+      const dbUser = await getUser();
+      socket.emit('leave-matchmaking', { 
+        userId: dbUser?._id,
+        auth0Id: user?.sub 
+      });
     }
     setStatus('idle');
   };

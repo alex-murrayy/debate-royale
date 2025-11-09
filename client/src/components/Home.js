@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { Mic, Trophy, Zap, Users, ArrowRight } from 'lucide-react';
 
 const Home = () => {
-  const { user } = useAuth();
+  const { isAuthenticated, login } = useAuth();
 
   return (
     <div className="min-h-screen relative pt-24">
@@ -13,37 +13,37 @@ const Home = () => {
           <h1 className="text-6xl md:text-8xl lg:text-9xl font-extrabold text-ub-white mb-8 leading-tight tracking-tight">
             <span className="block mb-2">Debate</span>
             <span className="block text-gradient animate-gradient bg-gradient-to-r from-ub-blue-300 via-victor-e-blue to-ub-blue-500 bg-clip-text text-transparent bg-[length:200%_auto]">
-              Arena
+              Royale
             </span>
           </h1>
           
           <p className="text-xl md:text-2xl text-slate-300 mb-16 max-w-4xl mx-auto leading-relaxed font-light">
-            Anonymous debates with AI-powered voiceovers. Level up, unlock voices, and prove your argumentative skills.
+            Anonymous debates with live audio and AI-powered voiceovers. Level up, unlock voices, and prove your argumentative skills.
           </p>
           
-          <div className="flex flex-col sm:flex-row gap-5 justify-center items-center mb-20">
-            {user ? (
-              <Link
-                to="/matchmaking"
-                className="group relative inline-flex items-center justify-center space-x-3 px-10 py-5 bg-gradient-to-r from-ub-blue-600 to-ub-blue-500 text-ub-white rounded-2xl font-bold text-lg transition-all transform hover:scale-105 hover:shadow-glow-lg shadow-glow-ub overflow-hidden"
-              >
-                <span className="relative z-10 flex items-center space-x-3">
-                  <span>Start Debating</span>
-                  <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                </span>
-              </Link>
-            ) : (
-              <Link
-                to="/register"
-                className="group relative inline-flex items-center justify-center space-x-3 px-10 py-5 bg-gradient-to-r from-ub-blue-600 to-ub-blue-500 text-ub-white rounded-2xl font-bold text-lg transition-all transform hover:scale-105 hover:shadow-glow-lg shadow-glow-ub overflow-hidden"
-              >
-                <span className="relative z-10 flex items-center space-x-3">
-                  <span>Get Started</span>
-                  <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                </span>
-              </Link>
-            )}
-          </div>
+              <div className="flex flex-col sm:flex-row gap-5 justify-center items-center mb-20">
+                {isAuthenticated ? (
+                  <Link
+                    to="/matchmaking"
+                    className="group relative inline-flex items-center justify-center space-x-3 px-10 py-5 bg-gradient-to-r from-ub-blue-600 to-ub-blue-500 text-ub-white rounded-2xl font-bold text-lg transition-all transform hover:scale-105 hover:shadow-glow-lg shadow-glow-ub overflow-hidden"
+                  >
+                    <span className="relative z-10 flex items-center space-x-3">
+                      <span>Start Debating</span>
+                      <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                    </span>
+                  </Link>
+                ) : (
+                  <button
+                    onClick={login}
+                    className="group relative inline-flex items-center justify-center space-x-3 px-10 py-5 bg-gradient-to-r from-ub-blue-600 to-ub-blue-500 text-ub-white rounded-2xl font-bold text-lg transition-all transform hover:scale-105 hover:shadow-glow-lg shadow-glow-ub overflow-hidden"
+                  >
+                    <span className="relative z-10 flex items-center space-x-3">
+                      <span>Get Started</span>
+                      <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                    </span>
+                  </button>
+                )}
+              </div>
 
           {/* Features */}
           <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto mt-32">

@@ -23,7 +23,7 @@ app.use(cors());
 app.use(express.json());
 
 // Database connection
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/debate-arena', {
+    mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/debate-royale', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 }).then(() => {
@@ -40,6 +40,10 @@ const voiceRoutes = require('./routes/voices');
 const lootBoxRoutes = require('./routes/lootboxes');
 const paymentRoutes = require('./routes/payments');
 
+// Import services
+const DebateMatchmaking = require('./services/debateMatchmaking');
+const WebRTCService = require('./services/webrtcService');
+
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
@@ -48,17 +52,17 @@ app.use('/api/voices', voiceRoutes);
 app.use('/api/lootboxes', lootBoxRoutes);
 app.use('/api/payments', paymentRoutes);
 
-// Socket.io for real-time debate matching
-const DebateMatchmaking = require('./services/debateMatchmaking');
+// Socket.io for real-time debate matching and WebRTC signaling
 const matchmaking = new DebateMatchmaking(io);
+const webrtcService = new WebRTCService(io);
 
 // Health check
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', message: 'Debate Arena API is running' });
+  res.json({ status: 'ok', message: 'Debate Royale API is running' });
 });
 
 server.listen(PORT, () => {
-  console.log(`🚀 Debate Arena server running on port ${PORT}`);
+      console.log(`🚀 Debate Royale server running on port ${PORT}`);
   console.log(`📝 Using ${process.env.ELEVENLABS_API_KEY ? 'REAL' : 'MOCK'} ElevenLabs API`);
   console.log(`💳 Using ${process.env.STRIPE_SECRET_KEY ? 'REAL' : 'MOCK'} Stripe`);
 });

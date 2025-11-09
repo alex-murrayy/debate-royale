@@ -3,7 +3,7 @@ const router = express.Router();
 const LootBox = require('../models/LootBox');
 const User = require('../models/User');
 const Voice = require('../models/Voice');
-const auth = require('../middleware/auth');
+const { auth0Middleware, auth0ErrorHandler } = require('../middleware/auth0');
 
 // Get all loot boxes
 router.get('/', async (req, res) => {
@@ -15,11 +15,16 @@ router.get('/', async (req, res) => {
   }
 });
 
-// Open loot box
-router.post('/open', auth, async (req, res) => {
+// Open loot box - protected
+router.post('/open', auth0Middleware, auth0ErrorHandler, async (req, res) => {
   try {
     const { lootBoxId } = req.body;
-    const user = await User.findById(req.userId);
+    const auth0Sub = req.auth.sub;
+    const user = await User.findOne({ auth0Id: auth0Sub });
+    
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
     
     // Get loot box
     const lootBox = await LootBox.findById(lootBoxId);

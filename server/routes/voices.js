@@ -2,10 +2,10 @@ const express = require('express');
 const router = express.Router();
 const Voice = require('../models/Voice');
 const User = require('../models/User');
-const auth = require('../middleware/auth');
+const { auth0Middleware, auth0ErrorHandler } = require('../middleware/auth0');
 const axios = require('axios');
 
-// Get all available voices
+// Get all available voices (public)
 router.get('/', async (req, res) => {
   try {
     const voices = await Voice.find();
@@ -15,11 +15,16 @@ router.get('/', async (req, res) => {
   }
 });
 
-// Generate voiceover using ElevenLabs
-router.post('/generate', auth, async (req, res) => {
+// Generate voiceover using ElevenLabs (protected)
+router.post('/generate', auth0Middleware, auth0ErrorHandler, async (req, res) => {
   try {
     const { text, voiceId } = req.body;
-    const user = await User.findById(req.userId);
+    const auth0Sub = req.auth.sub;
+    const user = await User.findOne({ auth0Id: auth0Sub });
+    
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
 
     // Check if user has unlocked this voice
     if (!user.unlockedVoices.includes(voiceId) && voiceId !== 'default') {
@@ -78,11 +83,16 @@ router.post('/generate', auth, async (req, res) => {
   }
 });
 
-// Unlock voice (purchase)
-router.post('/unlock', auth, async (req, res) => {
+// Unlock voice (purchase) - protected
+router.post('/unlock', auth0Middleware, auth0ErrorHandler, async (req, res) => {
   try {
     const { voiceId } = req.body;
-    const user = await User.findById(req.userId);
+    const auth0Sub = req.auth.sub;
+    const user = await User.findOne({ auth0Id: auth0Sub });
+    
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
 
     // Check if already unlocked
     if (user.unlockedVoices.includes(voiceId)) {
@@ -124,4 +134,3 @@ router.post('/unlock', auth, async (req, res) => {
 });
 
 module.exports = router;
-
