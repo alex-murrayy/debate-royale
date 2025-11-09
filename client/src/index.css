@@ -1,0 +1,70 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply antialiased;
+  }
+  
+  body {
+    @apply bg-gradient-to-br from-slate-950 via-ub-blue-900 to-slate-950 text-slate-100;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  code {
+    font-family: 'Fira Code', source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    @apply bg-gradient-to-r from-ub-blue-300 via-victor-e-blue to-ub-blue-500 bg-clip-text text-transparent;
+  }
+  
+  .text-gradient-primary {
+    @apply bg-gradient-to-r from-ub-blue-400 via-ub-blue-300 to-ub-blue-500 bg-clip-text text-transparent;
+  }
+  
+  .text-ub-blue {
+    @apply text-ub-blue-500;
+  }
+  
+  .glass {
+    @apply bg-slate-900/40 backdrop-blur-xl border border-slate-800/50;
+  }
+  
+  .glass-strong {
+    @apply bg-slate-900/60 backdrop-blur-2xl border border-slate-700/50;
+  }
+  
+  .glass-ub {
+    @apply bg-ub-blue-900/20 backdrop-blur-xl border border-ub-blue-500/20;
+  }
+  
+  .glow-effect {
+    @apply shadow-[0_0_20px_rgba(0,91,187,0.3)] hover:shadow-[0_0_30px_rgba(0,91,187,0.5)];
+  }
+  
+  .glow-ub {
+    @apply shadow-glow-ub;
+  }
+  
+  .animate-gradient {
+    background-size: 200% 200%;
+    animation: gradient 15s ease infinite;
+  }
+  
+  .bg-ub-gradient {
+    @apply bg-gradient-ub;
+  }
+  
+  .bg-ub-gradient-dark {
+    @apply bg-gradient-ub-dark;
+  }
+}
+

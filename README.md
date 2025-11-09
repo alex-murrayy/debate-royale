@@ -1,174 +1,168 @@
-# 🎙️ HackHub Narrator
+# 🎤 Debate Arena
 
-**AI-powered voiceover generator for hackathon demo videos**
+**Anonymous online debate game with AI-powered voiceovers, leveling system, and loot boxes**
 
-Tired after 24 hours of hacking? Let AI generate a professional voiceover for your demo video. No recording. No editing. Just results.
+Debate Arena is a competitive debate platform where users can engage in anonymous debates, level up, unlock voices and profile pictures, and purchase premium content through loot boxes.
 
 ## 🚀 Features
 
-- **AI-Powered Voice Generation**: Uses ElevenLabs API for high-quality text-to-speech
-- **Multiple Voice Options**: Choose from various voices with different accents, tones, and styles
-- **AI Script Generator**: Powered by Google Gemini to help you write your demo script
-- **User Accounts**: Save all your generated audio files with Auth0 authentication
-- **Modern UI**: Sleek, modern interface built with React and Tailwind CSS
-- **Instant Download**: Get your MP3 file ready to drop into your video editor
-
-## 🏆 Hackathon Prizes Targeted
-
-This project is designed to win multiple sponsor prizes:
-
-1. **ElevenLabs** - Best Use of ElevenLabs (Main prize: Beats Solo Buds)
-2. **GoDaddy Registry** - Best Domain Name
-3. **Auth0** - Best Use of Auth0
-4. **Google Gemini** - AI Integration
-5. **Vultr/Cloudflare** - Deployment
+- **Anonymous Debates**: Match with opponents and debate topics in real-time
+- **AI Voiceovers**: ElevenLabs-powered voiceovers for your arguments
+- **Leveling System**: Level up and rank up by winning debates
+- **Unlockable Content**: Unlock profile pictures and voices as you progress
+- **Loot Boxes**: Purchase loot boxes with real money to get random rewards
+- **Premium Voices**: Buy premium voices with credit cards via Stripe
+- **Real-time Matchmaking**: Socket.io-powered real-time debate matching
+- **User Profiles**: Track wins, losses, level, and rank
 
 ## 🛠️ Tech Stack
 
-- **Frontend**: React, Tailwind CSS, React Router
-- **Backend**: Node.js, Express
-- **APIs**:
+- **Frontend**: React, Tailwind CSS, Socket.io Client
+- **Backend**: Node.js, Express, Socket.io
+- **Database**: MongoDB with Mongoose
+- **APIs**: 
   - ElevenLabs (Text-to-Speech)
-  - Google Gemini (Script Generation)
-  - Auth0 (Authentication)
-- **Deployment**: Ready for Vultr/Cloudflare
+  - Stripe (Payments)
+- **Real-time**: Socket.io for matchmaking and debates
 
 ## 📦 Installation
 
 ### Prerequisites
 
 - Node.js (v16 or higher)
-- npm or yarn
+- MongoDB (local or cloud)
+- Stripe account (for payments)
+- ElevenLabs API key
 
 ### Setup
 
 1. **Clone the repository**
-
    ```bash
    git clone <your-repo-url>
    cd Backup
    ```
 
 2. **Install dependencies**
-
    ```bash
    npm run install-all
    ```
 
 3. **Set up environment variables**
-
    ```bash
-   cp .env.example .env
+   cp env.example .env
    ```
 
-   Edit `.env` and add your API keys:
+   Edit `.env` and add:
+   - `MONGODB_URI` - MongoDB connection string
+   - `JWT_SECRET` - Secret for JWT tokens
+   - `ELEVENLABS_API_KEY` - Your ElevenLabs API key
+   - `STRIPE_SECRET_KEY` - Your Stripe secret key
+   - `STRIPE_WEBHOOK_SECRET` - Your Stripe webhook secret
+   - `REACT_APP_STRIPE_PUBLISHABLE_KEY` - Your Stripe publishable key
 
-   - `ELEVENLABS_API_KEY` - Get from [ElevenLabs](https://elevenlabs.io)
-   - `GEMINI_API_KEY` - Get from [Google AI Studio](https://makersuite.google.com/app/apikey)
-   - `AUTH0_DOMAIN` - Get from [Auth0](https://auth0.com)
-   - `AUTH0_CLIENT_ID` - Get from Auth0
-   - `REACT_APP_AUTH0_DOMAIN` - Same as AUTH0_DOMAIN
-   - `REACT_APP_AUTH0_CLIENT_ID` - Same as AUTH0_CLIENT_ID
+4. **Start MongoDB** (if running locally)
+   ```bash
+   mongod
+   ```
 
-4. **Run the development server**
-
+5. **Run the development server**
    ```bash
    npm run dev
    ```
 
-   This will start both the backend server (port 5000) and frontend (port 3000).
+   This will start:
+   - Backend server on http://localhost:5000
+   - Frontend on http://localhost:3000
 
-## 🎯 Usage
+## 🎮 How to Play
 
-1. **Generate a Script** (Optional)
+1. **Register/Login**: Create an account or login
+2. **Find Debate**: Enter a topic and search for an opponent
+3. **Debate**: Submit arguments with AI-generated voiceovers
+4. **Win**: Win debates to gain experience and level up
+5. **Unlock**: Unlock new voices and profile pictures
+6. **Purchase**: Buy loot boxes or premium voices with real money
 
-   - Click "Generate Script with AI"
-   - Enter your project name and description
-   - Let Gemini generate a 30-second demo script
+## 🏆 Ranking System
 
-2. **Enter Your Script**
+- **Bronze**: Level 1-4
+- **Silver**: Level 5-9
+- **Gold**: Level 10-19
+- **Platinum**: Level 20-29
+- **Diamond**: Level 30-39
+- **Master**: Level 40-49
+- **Grandmaster**: Level 50+
 
-   - Type or paste your demo script
-   - Or use the AI-generated script
+## 💰 Economy
 
-3. **Select a Voice**
+- **Coins**: Earned by winning debates, used to unlock voices
+- **Gems**: Premium currency, can be purchased or found in loot boxes
+- **Loot Boxes**: Purchase with real money, contain random rewards
+- **Premium Voices**: Buy directly with credit card
 
-   - Choose from available voices
-   - Adjust stability and similarity boost settings
+## 🔧 API Endpoints
 
-4. **Generate Voiceover**
+### Authentication
+- `POST /api/auth/register` - Register new user
+- `POST /api/auth/login` - Login user
 
-   - Click "Generate Voiceover"
-   - Wait for the AI to create your audio
-   - Preview and download your MP3 file
+### Users
+- `GET /api/users/profile` - Get user profile
+- `PUT /api/users/profile-picture` - Update profile picture
+- `PUT /api/users/voice` - Update selected voice
 
-5. **Save to Account** (Optional)
-   - Login with Auth0 to save your audio files
-   - Access them later from your dashboard
+### Debates
+- `GET /api/debates/my-debates` - Get user's debates
+- `GET /api/debates/:id` - Get debate by ID
 
-## 🔧 API Configuration
+### Voices
+- `GET /api/voices` - Get all available voices
+- `POST /api/voices/generate` - Generate voiceover
+- `POST /api/voices/unlock` - Unlock voice with coins/gems
 
-### ElevenLabs API
+### Loot Boxes
+- `GET /api/lootboxes` - Get all loot boxes
+- `POST /api/lootboxes/open` - Open a loot box
 
-1. Sign up at [ElevenLabs](https://elevenlabs.io)
-2. Get your API key from the dashboard
-3. Add it to `.env` as `ELEVENLABS_API_KEY`
-
-### Google Gemini API
-
-1. Go to [Google AI Studio](https://makersuite.google.com/app/apikey)
-2. Create an API key
-3. Add it to `.env` as `GEMINI_API_KEY`
-
-### Auth0 Setup
-
-1. Create an account at [Auth0](https://auth0.com)
-2. Create a new application (Single Page Application)
-3. Add `http://localhost:3000` to allowed callback URLs
-4. Copy Domain and Client ID to `.env`
-
-## 🚢 Deployment
-
-### Deploy to Vultr
-
-1. Build the React app:
-
-   ```bash
-   npm run build
-   ```
-
-2. Deploy the server to Vultr
-3. Set environment variables on Vultr
-4. Update `REACT_APP_API_URL` to your production API URL
-
-### Deploy to Cloudflare Pages
-
-1. Build the React app
-2. Deploy to Cloudflare Pages
-3. Configure environment variables
-4. Set up Workers for the API (if needed)
-
-## 📝 Demo Mode
-
-If you don't have API keys yet, the app will run in demo mode with mock responses. This allows you to test the UI and flow without real API calls.
+### Payments
+- `POST /api/payments/create-payment-intent` - Create Stripe payment intent
+- `POST /api/payments/purchase-voice` - Purchase voice with real money
+- `POST /api/payments/webhook` - Stripe webhook handler
 
 ## 🎨 Customization
 
-- Modify voices in `server/index.js` (AVAILABLE_VOICES)
-- Customize UI colors in `client/tailwind.config.js`
-- Add more features in `client/src/components/`
+- Modify voices in database (Voice model)
+- Adjust leveling curve in User model
+- Customize loot box rewards in LootBox model
+- Update ranks and requirements
+
+## 📝 Database Models
+
+- **User**: User accounts with level, rank, unlocked content
+- **Debate**: Debate sessions with arguments and results
+- **Voice**: Available voices with pricing and requirements
+- **LootBox**: Loot box definitions with rewards
+
+## 🚢 Deployment
+
+1. Set up MongoDB Atlas or other cloud database
+2. Deploy backend to Vultr/Heroku/Railway
+3. Deploy frontend to Vercel/Netlify
+4. Configure environment variables
+5. Set up Stripe webhooks
+6. Configure CORS and Socket.io settings
+
+## 🔐 Security
+
+- Passwords are hashed with bcrypt
+- JWT tokens for authentication
+- Stripe webhook signature verification
+- Input validation and sanitization
 
 ## 📄 License
 
-MIT License - feel free to use this for your hackathon!
-
-## 🙏 Credits
-
-- Built for hackathon with focus on sponsor integration
-- Powered by ElevenLabs, Google Gemini, and Auth0
-- UI designed for tired hackers who need quick results
+MIT License - feel free to use this for your project!
 
 ---
 
-**Good luck with your hackathon! 🚀**
-# master-debtor
+**Built with ❤️ for competitive debaters**
