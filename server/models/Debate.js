@@ -6,9 +6,8 @@ const debateSchema = new mongoose.Schema({
     required: true
   },
   player1: {
-    userId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
+    sessionId: {
+      type: String,
       required: true
     },
     username: String,
@@ -24,10 +23,7 @@ const debateSchema = new mongoose.Schema({
     }]
   },
   player2: {
-    userId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User'
-    },
+    sessionId: String,
     username: String,
     side: {
       type: String,
@@ -44,9 +40,26 @@ const debateSchema = new mongoose.Schema({
     enum: ['waiting', 'active', 'finished'],
     default: 'waiting'
   },
+  votes: {
+    player1: {
+      type: Number,
+      default: 0
+    },
+    player2: {
+      type: Number,
+      default: 0
+    },
+    voters: [{
+      type: String // sessionId of voters
+    }]
+  },
+  spectatorCount: {
+    type: Number,
+    default: 0
+  },
   winner: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
+    type: String, // 'player1' or 'player2'
+    default: null
   },
   createdAt: {
     type: Date,

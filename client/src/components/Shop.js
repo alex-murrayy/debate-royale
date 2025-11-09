@@ -4,7 +4,7 @@ import axios from 'axios';
 import { loadStripe } from '@stripe/stripe-js';
 import { ShoppingBag, Gift, CreditCard, Coins, Mic } from 'lucide-react';
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5001';
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY || 'pk_test_mock_key');
 
 const Shop = () => {

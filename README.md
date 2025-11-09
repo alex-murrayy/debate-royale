@@ -30,9 +30,10 @@ Debate Royale is a competitive debate platform where users can engage in anonymo
 ### Prerequisites
 
 - Node.js (v16 or higher)
-- MongoDB (local or cloud)
-- Stripe account (for payments)
-- ElevenLabs API key
+- Docker and Docker Compose (for MongoDB) - **Recommended**
+  - OR MongoDB installed locally (v5.0 or higher)
+- Stripe account (for payments) - Optional
+- ElevenLabs API key - Optional
 
 ### Setup
 
@@ -49,26 +50,40 @@ Debate Royale is a competitive debate platform where users can engage in anonymo
    npm run install-all
    ```
 
-3. **Set up environment variables**
+3. **Start MongoDB with Docker** (Recommended)
+
+   ```bash
+   npm run mongo:up
+   ```
+
+   This will start MongoDB in a Docker container. The database will be available at `mongodb://localhost:27017/debate-royale`.
+
+   **Other MongoDB commands:**
+
+   - `npm run mongo:down` - Stop and remove MongoDB container
+   - `npm run mongo:logs` - View MongoDB logs
+   - `npm run mongo:stop` - Stop MongoDB container
+   - `npm run mongo:start` - Start MongoDB container
+
+   **Alternative: Use local MongoDB**
+
+   If you prefer to run MongoDB locally instead of Docker:
+
+   ```bash
+   mongod
+   ```
+
+   📖 **For detailed Docker setup instructions, see [DOCKER_SETUP.md](./DOCKER_SETUP.md)**
+
+4. **Set up environment variables**
+
+   Copy the example environment file:
 
    ```bash
    cp env.example .env
    ```
 
-   Edit `.env` and add:
-
-   - `MONGODB_URI` - MongoDB connection string
-   - `JWT_SECRET` - Secret for JWT tokens
-   - `ELEVENLABS_API_KEY` - Your ElevenLabs API key
-   - `STRIPE_SECRET_KEY` - Your Stripe secret key
-   - `STRIPE_WEBHOOK_SECRET` - Your Stripe webhook secret
-   - `REACT_APP_STRIPE_PUBLISHABLE_KEY` - Your Stripe publishable key
-
-4. **Start MongoDB** (if running locally)
-
-   ```bash
-   mongod
-   ```
+   The default configuration works with Docker MongoDB. If you're using a cloud MongoDB instance, update `MONGODB_URI` in `.env`.
 
 5. **Run the development server**
 
@@ -78,7 +93,7 @@ Debate Royale is a competitive debate platform where users can engage in anonymo
 
    This will start:
 
-   - Backend server on http://localhost:5000
+   - Backend server on http://localhost:5001
    - Frontend on http://localhost:3000
 
 ## 🎮 How to Play
@@ -182,6 +197,7 @@ If you see warnings about "Auth0 development keys":
 2. **Proper Fix**: Set up production keys (see `SETUP_SOCIAL_CONNECTIONS.md`)
 
 For production, configure your own Client ID/Secret for social providers to:
+
 - Remove dev keys warnings
 - Show your app branding on consent screens
 - Enable full SSO functionality

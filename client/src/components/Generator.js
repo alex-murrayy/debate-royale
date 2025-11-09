@@ -3,7 +3,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import axios from 'axios';
 import { Mic, Sparkles, Download, Loader, Play, Volume2, Settings, Zap, FileText, Wand2 } from 'lucide-react';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5001';
 
 const Generator = () => {
   const { isAuthenticated, user } = useAuth0();

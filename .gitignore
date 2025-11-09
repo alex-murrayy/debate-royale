@@ -36,3 +36,4 @@ Thumbs.db
 
 # MongoDB
 *.log
+mongodb_data/

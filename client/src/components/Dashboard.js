@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Trophy, TrendingUp, Award, BarChart3 } from 'lucide-react';
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5001';
 
 const Dashboard = () => {
   const { user, isAuthenticated, isLoading, login, fetchUser } = useAuth();

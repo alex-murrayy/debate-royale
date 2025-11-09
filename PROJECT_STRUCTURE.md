@@ -67,25 +67,34 @@ See `env.example` for all required environment variables:
 ## API Endpoints
 
 ### GET `/api/voices`
+
 Returns list of available voices
 
 ### POST `/api/generate-script`
+
 Generates a script using Gemini AI
+
 - Body: `{ projectName, description }`
 - Returns: `{ script }`
 
 ### POST `/api/generate-voiceover`
+
 Generates voiceover using ElevenLabs
+
 - Body: `{ text, voiceId, stability, similarityBoost, userId }`
 - Returns: MP3 audio file
 
 ### GET `/api/user/audio`
+
 Gets user's saved audio files
+
 - Header: `user-id`
 - Returns: `{ audioFiles: [] }`
 
 ### GET `/api/user/audio/:audioId`
+
 Downloads a specific audio file
+
 - Header: `user-id`
 - Returns: MP3 audio file
 
@@ -131,4 +140,3 @@ App
 - Backend: Deploy to Vultr/Cloudflare Workers
 - Environment variables: Set in deployment platform
 - Database: Replace in-memory storage with database (MongoDB, PostgreSQL, etc.)
-
